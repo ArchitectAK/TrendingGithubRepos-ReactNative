@@ -1,5 +1,6 @@
 *.pbxproj -text
 * linguist-vendored
+*.js linguist-detectable=true
 *.js linguist-vendored=true
 *.h linguist-vendored=false
 *.m linguist-vendored=false
