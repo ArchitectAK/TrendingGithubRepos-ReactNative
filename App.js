@@ -14,13 +14,14 @@ import {Header, LearnMoreLinks, Colors, DebugInstructions, ReloadInstructions} f
 const App = () => {
   return (
     <Fragment>
-      <StatusBar barStyle="dark-content" />
+      <StatusBar barStyle="light-content" />
       <SafeAreaView>
         <ScrollView contentInsetAdjustmentBehavior="automatic" style={styles.scrollView}>
           <Header />
           {global.HermesInternal == null ? null : (
             <View style={styles.engine}>
               <Text style={styles.footer}>Engine: Hermes</Text>
+              
             </View>
           )}
           <View style={styles.body}>
