@@ -1,4 +1,4 @@
-import ApiManager, {METHOD_GET} from '../manager/ApiManager';
+import ApiManager, {METHOD_GET} from '../network/ApiManager';
 
 export const fetchData = url => {
   return new Promise((resolve, reject) => {
