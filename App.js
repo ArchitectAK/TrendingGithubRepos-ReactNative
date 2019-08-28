@@ -6,17 +6,15 @@
  * @flow
  */
 
-import React, {Fragment, Component} from 'react';
-import {SafeAreaView, StyleSheet, Text, StatusBar} from 'react-native';
+import React, {Component} from 'react';
+import {View, Image, ActivityIndicator, FlatList, StyleSheet, TouchableOpacity, Text} from 'react-native';
 import {fetchData} from './src/network/Services';
-
-import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      arraySearchResult: [],
+      repoList: [],
       loading: true,
     };
   }
@@ -29,7 +27,7 @@ class App extends Component {
       .then(respone => {
         const result = respone.data;
         console.log(' RESPONSE RECEIVED: ', result);
-        this.setState({arraySearchResult: result.items, loading: false});
+        this.setState({repoList: result.items, loading: false});
       })
       .catch(err => {
         console.log(' ERROR: ', err.message);
@@ -37,51 +35,232 @@ class App extends Component {
   };
   render() {
     return (
-      <Fragment>
-        <StatusBar barStyle="light-content" />
-        <SafeAreaView>
-          <Text>Hi</Text>
-        </SafeAreaView>
-      </Fragment>
+      <View style={styles.searchResultcontainer}>
+        <View style={styles.flatListView}>
+          <FlatList>
+            data={this.state.arraySearchResult}
+            renderItem=
+            {({item}) => (
+              <TouchableOpacity
+                style={styles.searchResultStyle}
+                onPress={() => {
+                  console.log('press me');
+                  this.props.navigation.navigate('propertyResults');
+                }}>
+                <View style={styles.searchResultStyle}>
+                  <View>
+                    <Image
+                      style={{width: '100%', height: 200, marginTop: 0, borderTopLeftRadius: 4, borderTopRightRadius: 4}}
+                      source={{uri: item.cover == null ? item.medias[0].thumbnailUrl : item.cover.thumbnailUrl}}
+                    />
+                    <View style={styles.container}>
+                      <Text style={styles.boldTextStyle}>{item.prices == null ? '' : 'RM ' + item.prices[0].min}</Text>
+                      {/* <Text style={homeStyle.boldTextStyle}>{item.title}</Text> */}
+                      {this.renderAddress(item)}
+                      <Text style={styles.addressStyle}>{item.address == null ? '' : item.address.formattedAddress}</Text>
+                      <Text>{item.propertyType}</Text>
+                      <Text>
+                        Built-up Size: {item.attributes == null ? '' : item.attributes.builtUp + ' ' + item.attributes.sizeUnit}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            )}
+          </FlatList>
+        </View>
+        {this.state.loading === true ? (
+          <View style={styles.loading}>
+            <ActivityIndicator size="large" color="#0082C8" />
+          </View>
+        ) : null}
+      </View>
     );
   }
 
-  styles = StyleSheet.create({
-    scrollView: {
-      backgroundColor: Colors.lighter,
+  const styles = StyleSheet.create({
+  
+    headerView: {
+      height: '40%',
+      width: '100%',
+      flexDirection: 'row',
+      alignItems: 'flex-start',
     },
-    engine: {
-      position: 'absolute',
-      right: 0,
+    mainview: {
+      height: '50%',
+      marginLeft: '5%',
+      marginRight: '5%',
+      backgroundColor: '#FFFFFF',
+
+      borderRadius: 4,
+      marginTop: 20,
     },
-    body: {
-      backgroundColor: Colors.white,
+
+    subContainer: {
+      height: '40%',
+      width: '100%',
+      backgroundColor: '#0082C8',
     },
-    sectionContainer: {
-      marginTop: 32,
-      paddingHorizontal: 24,
+    logoText: {
+      width: '100%',
+      height: 28,
+      fontSize: 20,
+      fontFamily: 'Helvetica',
+      textAlign: 'center',
+      color: 'white',
+      marginTop: 10,
     },
-    sectionTitle: {
-      fontSize: 24,
-      fontWeight: '600',
-      color: Colors.black,
+    buyTab: {
+      height: '100%',
+      flex: 1.2,
+      flexDirection: 'column',
     },
-    sectionDescription: {
-      marginTop: 8,
+    buyText: {
+      fontSize: 22,
+      fontFamily: 'Helvetica',
+      color: '#0280C5',
+      marginTop: 7,
+      marginLeft: 50,
+    },
+    SellText: {
+      fontSize: 22,
+      fontFamily: 'Helvetica',
+      color: 'black',
+      marginTop: 7,
+      marginLeft: 40,
+    },
+    serchText: {
       fontSize: 18,
-      fontWeight: '400',
-      color: Colors.dark,
+      fontFamily: 'Helvetica',
+      color: 'black',
+      marginTop: 10,
+      marginLeft: '40%',
     },
-    highlight: {
-      fontWeight: '700',
+
+    rentTab: {
+      height: '100%',
+      flex: 1,
+      flexDirection: 'column',
     },
-    footer: {
-      color: Colors.dark,
-      fontSize: 12,
-      fontWeight: '600',
-      padding: 4,
-      paddingRight: 12,
-      textAlign: 'right',
+    headerSearch: {
+      height: '60%',
+      width: '100%',
+      flexDirection: 'row',
+    },
+
+    searchbarView: {
+      flexDirection: 'row',
+      height: '54%',
+      width: '100%',
+      borderTopWidth: 1,
+      borderColor: 'gray',
+      marginTop: 10,
+    },
+    searchBarimage: {
+      width: 324,
+      height: 50,
+      marginTop: 10,
+      marginLeft: 0,
+    },
+
+    searchResultcontainer: {
+      flex: 1,
+      backgroundColor: 'gray',
+    },
+
+    // container: {
+    //     flex: 1,
+    //     marginTop: 1,
+    //     justifyContent: 'center',
+    //     alignItems: 'center',
+    //     backgroundColor: '#F5FCFF',
+    // },
+    h2text: {
+      marginTop: 10,
+      fontFamily: 'Helvetica',
+      fontSize: 20,
+      fontWeight: 'bold',
+    },
+    flatview: {
+      justifyContent: 'center',
+      paddingTop: 10,
+      borderRadius: 2,
+    },
+    name: {
+      fontFamily: 'Verdana',
+      fontSize: 18,
+    },
+    email: {
+      color: 'red',
+    },
+    flatListView: {
+      flex: 1,
+      marginTop: 10,
+      marginLeft: '5%',
+      marginRight: '5%',
+    },
+    newsView: {
+      height: 250,
+      width: '100%',
+      backgroundColor: '#FFFFFF',
+      borderRadius: 5,
+    },
+
+    searchResultStyle: {
+      marginBottom: 10,
+      height: 350,
+      width: '100%',
+      backgroundColor: '#ffffff',
+      borderRadius: 5,
+    },
+
+    spaceView: {
+      height: 10,
+      backgroundColor: 'gray',
+      marginTop: 10,
+    },
+    loading: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      top: 0,
+      bottom: 0,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    container: {
+      marginTop: '2%',
+      marginLeft: '5%',
+      marginRight: '5%',
+    },
+    attrContainer: {
+      flex: 1,
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      alignItems: 'flex-start',
+    },
+    attrItem: {
+      width: '50%',
+    },
+    boldTextStyle: {
+      fontWeight: 'bold',
+      marginTop: '2%',
+      marginBottom: '2%',
+    },
+    addressStyle: {
+      marginTop: '2%',
+      marginBottom: '2%',
+    },
+    moreDetails: {
+      color: 'blue',
+      fontWeight: 'bold',
+      marginTop: '2%',
+      marginBottom: '2%',
+    },
+    advertiserStyle: {
+      flex: 1,
+      flexDirection: 'row',
+      flexWrap: 'wrap',
     },
   });
 }
