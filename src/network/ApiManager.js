@@ -7,13 +7,14 @@ export const ACCEPT_APP_JSON = 'application/json';
 export default function ApiManager(url, reqType) {
   console.log('Method type is', reqType);
 
-  let prevResolve = null;
-  let prevReject = null;
-
   return new Promise(async (resolve, reject) => {
     prevResolve = resolve;
     prevReject = reject;
-    let headers = {'Content-Type': CONTENT_TYPE_APP_JSON, Accept: ACCEPT_APP_JSON, charset: 'utf-8'};
+    let headers = {
+      'Content-Type': CONTENT_TYPE_APP_JSON,
+      Accept: ACCEPT_APP_JSON,
+      charset: 'utf-8',
+    };
     let config = {
       method: reqType,
       headers: headers,
